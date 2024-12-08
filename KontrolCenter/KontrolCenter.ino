@@ -13,8 +13,8 @@
 #define RELAY_3 8
 #define RELAY_4 9
 
-#define TIMEOUT 1 * 60
-#define ALARM_ON_TIME 8
+#define TIMEOUT 10 * 60
+#define ALARM_ON_TIME 7
 
 #include <LCD_I2C.h>
 
@@ -32,6 +32,7 @@ int secondsTotal = TIMEOUT;
 int minutes;
 int seconds;
 int numberOfRound = 1;
+bool alarmTest = false;
 
 void setup() {
   pinMode(SW_1, INPUT_PULLUP);
@@ -80,6 +81,20 @@ void loop() {
       secondsTotal = TIMEOUT;
       timeHasChanged = true;
       delay(100);
+    }
+
+    if( digitalRead(SW_3) == LOW ) {
+      alarmTest = !alarmTest;
+      if ( alarmTest == true ) {
+        Serial.println("ENABLING ALARM");
+        relayAllOn();
+      }
+      else {
+        Serial.println("DISABLE ALARM");
+        relayAllOff();
+      }
+
+      delay(200);
     }
   }
 
